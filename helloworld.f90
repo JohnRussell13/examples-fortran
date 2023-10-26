@@ -1,20 +1,26 @@
 program hello
       implicit none
 
-      real :: height
-      character :: initial
-      complex :: point
-      logical :: bool
-      integer :: age
+      integer :: i
+      real :: first(10)
+      integer :: second(-2:2)
+      integer, allocatable :: third(:,:)
 
-      height = 1.82
-      initial = 'A'
-      point = (2, -1)
-      bool = .true.
-      age = 90
+      first = [(i, i = 1, 10)]
+      first(1:10:2) = 0
+      print *, first
+      
+      second = [(i, i = -2, 2)]
+      print *, second(-1)
 
-      print *, 'Hey ', initial, ', I see it is', bool, 'that you are', height, 'm tall'
-      print *, 'Are you really,', age, 'years old? This is a number', point
+      ! Dynamic allocation
+      allocate(third(3, 5))
+      
+      third(1,:) = [(i, i = 1, 5)]
+      third(2,:) = [(i, i = 1, 5)]
+      third(3,:) = [(i, i = 1, 5)]
+      third(:,2) = 0
 
-      print *, (0, 1), '*', (0,1), '=', (0,1) * (0,1)
+      print *, third
+      deallocate(third)
 end program hello
