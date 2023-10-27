@@ -52,13 +52,12 @@ do i = 1,size(inMatrix,1)
         if (inMatrix(i)(j+1:j+1) == "1") then
           cycle
         else
-          ! Handle valid place
+          ! Handle valid next place
           if (inMatrix(i-1)(j+1:j+1) == "Y") then
             loopFlag = .false.
-          ! Handle invalid place
-          else
-            ! inMatrix(i)(j) = "N"
-            cycle
+          ! Handle invalid next place
+          ! else
+          !   cycle
           end if
         end if
       ! Handle NO WALL
@@ -68,7 +67,13 @@ do i = 1,size(inMatrix,1)
           inMatrix(i)(j:j) = "Y"
         ! Handle invalid place
         else
-          ! inMatrix(i)(j) = "N"
+          ! Handle valid next place
+          if (inMatrix(i-1)(j+1:j+1) == "Y") then
+            loopFlag = .false.
+          ! Handle invalid next place
+          ! else
+          !   cycle
+          end if
         end if
       end if
     end if
