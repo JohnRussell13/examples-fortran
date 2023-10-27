@@ -21,12 +21,14 @@ allocate(inMatrix(numLines))
 
 ! 4. Read the file content
 rewind(fid)
-do I = 1, numLines
+do i = 1, numLines
   read(fid,'(A)') inMatrix(i)
 end do
 
-do I = 1,size(inMatrix,1)
-  
+inMatrix(2) = "1010101010"
+
+do i = size(inMatrix,1),1,-1
+  write(*,*) inMatrix(i)(2:3)
 end do
 
 deallocate(inMatrix)
