@@ -1,38 +1,35 @@
 program readText
 implicit none
 
-integer :: FID = 1
-character*256 :: CTMP
+integer :: fid = 1
+character*256 :: ctmp
 
 ! 1. Assuming that no line of text.txt contains more than 256 characters
-character*256, allocatable :: MY_ARRAY(:)
-integer :: I = 0, IERR = 0, NUM_LINES = 0
+character*256, allocatable :: inMatrix(:)
+integer :: i = 0, ierr = 0, numLines = 0
 
-open(unit=FID,file='text.txt')
+open(unit=fid,file='text.txt')
 
 ! 2. Get number of lines
-do while (IERR == 0)
-  NUM_LINES = NUM_LINES + 1
-  read(FID,*,iostat=IERR) CTMP
+do while (ierr == 0)
+  numLines = numLines + 1
+  read(fid,*,iostat=ierr) CTMP
 end do
-NUM_LINES = NUM_LINES - 1
-write(*,'(A,I0)') "Number of lines = ", NUM_LINES
+numLines = numLines - 1
 
-! 3. Allocate array of strings
-allocate(MY_ARRAY(NUM_LINES))
+allocate(inMatrix(numLines))
 
 ! 4. Read the file content
-rewind(FID)
-do I = 1, NUM_LINES
-  read(FID,'(A)') MY_ARRAY(I)
+rewind(fid)
+do I = 1, numLines
+  read(fid,'(A)') inMatrix(i)
 end do
 
-! 5. Print array to standard output
-do I = 1,size(MY_ARRAY,1)
-  write(*,*) trim(MY_ARRAY(I))
+do I = 1,size(inMatrix,1)
+  
 end do
 
-deallocate(MY_ARRAY)
-close(FID)
+deallocate(inMatrix)
+close(fid)
 
 end program readText
