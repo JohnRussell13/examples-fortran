@@ -4,33 +4,39 @@ implicit none
 integer :: fid = 1
 character*256 :: ctmp
 
-! 1. Assuming that no line of text.txt contains more than 256 characters
+!! Max line size 256
 character*256, allocatable :: inMatrix(:)
-integer :: i = 0, ierr = 0, numLines = 0
+integer :: i, j,  ierr = 0, numLines = 0
 
 open(unit=fid,file='text.txt')
 
-! 2. Get number of lines
+! Get number of lines in input
 do while (ierr == 0)
   numLines = numLines + 1
   read(fid,*,iostat=ierr) CTMP
 end do
 numLines = numLines - 1
 
+! Read input
 allocate(inMatrix(numLines))
-
-! 4. Read the file content
 rewind(fid)
 do i = 1, numLines
   read(fid,'(A)') inMatrix(i)
 end do
 
-inMatrix(2) = "1010101010"
-
+! MAIN PROGRAM
 do i = size(inMatrix,1),1,-1
-  write(*,*) inMatrix(i)(2:3)
+  do j = 1,numLines,1
+    inMatrix(i)(j:j) = "Y"
+  end do
 end do
 
+! Print result
+do i = 1,size(inMatrix,1),1
+  write(*,*) trim(inMatrix(i))
+end do
+
+! Finish program
 deallocate(inMatrix)
 close(fid)
 
