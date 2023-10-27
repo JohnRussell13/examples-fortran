@@ -6,7 +6,7 @@ character*256 :: ctmp
 
 !! Max line size 256
 character*256, allocatable :: inMatrix(:)
-integer :: i, j,  ierr = 0, numLines = 0
+integer :: i, j, k, ierr = 0, numLines = 0
 logical :: loopFlag
 
 open(unit=fid,file='text.txt')
@@ -25,10 +25,11 @@ do i = 1, numLines
   read(fid,'(A)') inMatrix(i)
 end do
 
+k = 1
 ! MAIN PROGRAM
 do i = 1,size(inMatrix,1)
   loopFlag = .false.
-  do j = 1,numLines
+  do j = k,numLines
     ! Handle first line
     if (i == 1) then
       ! Handle WALL
@@ -43,6 +44,12 @@ do i = 1,size(inMatrix,1)
       ! Handle end of the line
       if (j == size(inMatrix,1) .and. inMatrix(i)(j:j) == "1") then
         exit
+      end if
+
+      ! Handle start of the line
+      if (j == k .and. inMatrix(i)(j:j) == "1") then
+        k = k + 1
+        cycle
       end if
 
       ! Handle WALL
@@ -82,7 +89,7 @@ end do
 
 ! Print result
 do i = 1,size(inMatrix,1)
-  write(*,*) trim(inMatrix(i))
+  write(*,"(a)") trim(inMatrix(i))
 end do
 
 ! Finish program
