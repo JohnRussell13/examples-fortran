@@ -32,37 +32,41 @@ do i = 1,size(inMatrix,1)
     ! Handle first line
     if (i == 1) then
       ! Handle WALL
-      if (inMatrix(i)(j:j) == "X") then
+      if (inMatrix(i)(j:j) == "1") then
         exit
+      ! Handle before WALL
       else
         inMatrix(i)(j:j) = "Y"
       end if
+    ! Handle regular lines
     else
       ! Handle end of the line
-      if (j == size(inMatrix,1) .and. inMatrix(i)(j:j) == "X") then
+      if (j == size(inMatrix,1) .and. inMatrix(i)(j:j) == "1") then
         exit
       end if
 
       ! Handle WALL
-      if (inMatrix(i)(j:j) == "X") then
+      if (inMatrix(i)(j:j) == "1") then
         loopFlag = .true.
         ! Handle continuing WALL
-        if (inMatrix(i)(j+1:j+1) == "X") then
+        if (inMatrix(i)(j+1:j+1) == "1") then
           cycle
         else
           ! Handle valid place
           if (inMatrix(i-1)(j+1:j+1) == "Y") then
-            inMatrix(i)(j:j) = "Y"
             loopFlag = .false.
+          ! Handle invalid place
           else
             ! inMatrix(i)(j) = "N"
             cycle
           end if
         end if
+      ! Handle NO WALL
       else
         ! Handle valid place
         if (.not. loopFlag) then
           inMatrix(i)(j:j) = "Y"
+        ! Handle invalid place
         else
           ! inMatrix(i)(j) = "N"
         end if
