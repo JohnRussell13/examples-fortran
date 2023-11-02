@@ -1,32 +1,47 @@
 module MatrixModule
 implicit none
 
+public :: matrixSize
 public :: matrixReader
 contains
 
-  function matrixReader() result(inMatrix)
+  function matrixSize() result(numLines)
     implicit none
 
+    integer :: numLines
     integer :: fid = 1
     character*256 :: ctmp
 
-    !! Max line size 256
-    character*256, allocatable :: inMatrix(:)
-    integer :: i, ierr = 0, numLines = 0
-    logical :: loopFlag
+    integer :: ierr = 0
 
     open(unit=fid,file='text.txt')
 
     ! Get number of lines in input
+    numLines = 0
     do while (ierr == 0)
       numLines = numLines + 1
       read(fid,*,iostat=ierr) ctmp
     end do
     numLines = numLines - 1
+    
+    close(fid)
+  end function matrixSize
+
+  function matrixReader(numLines) result(inMatrix)
+    implicit none
+
+    integer :: numLines
+    !! Max line size 256
+    character*256, allocatable :: inMatrix(:)
+
+    integer :: fid = 1
+    integer :: i
+
+    open(unit=fid,file='text.txt')
 
     ! Read input
     allocate(inMatrix(numLines))
-    rewind(fid)
+    ! rewind(fid)
     do i = 1, numLines
       read(fid,'(A)') inMatrix(i)
     end do
@@ -43,7 +58,8 @@ character*256, allocatable :: inMatrix(:)
 integer :: i, j, k, ierr = 0, matrixHeight, matrixWidth
 logical :: loopFlag
 
-inMatrix = matrixReader()
+matrixHeight = matrixSize()
+inMatrix = matrixReader(matrixHeight)
 
 matrixHeight = 12
 matrixWidth = len(trim(inMatrix(1)))
