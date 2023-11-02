@@ -1,36 +1,57 @@
-program readText
+module MatrixModule
 implicit none
 
-integer :: fid = 1
-character*256 :: ctmp
+public :: matrixReader
+contains
 
-!! Max line size 256
+  function matrixReader() result(inMatrix)
+    implicit none
+
+    integer :: fid = 1
+    character*256 :: ctmp
+
+    !! Max line size 256
+    character*256, allocatable :: inMatrix(:)
+    integer :: i, ierr = 0, numLines = 0
+    logical :: loopFlag
+
+    open(unit=fid,file='text.txt')
+
+    ! Get number of lines in input
+    do while (ierr == 0)
+      numLines = numLines + 1
+      read(fid,*,iostat=ierr) ctmp
+    end do
+    numLines = numLines - 1
+
+    ! Read input
+    allocate(inMatrix(numLines))
+    rewind(fid)
+    do i = 1, numLines
+      read(fid,'(A)') inMatrix(i)
+    end do
+
+    close(fid)
+  end function matrixReader
+end module MatrixModule
+
+program readText
+use MatrixModule
+implicit none
+
 character*256, allocatable :: inMatrix(:)
-integer :: i, j, k, ierr = 0, numLines = 0, lineLen
+integer :: i, j, k, ierr = 0, matrixHeight, matrixWidth
 logical :: loopFlag
 
-open(unit=fid,file='text.txt')
+inMatrix = matrixReader()
 
-! Get number of lines in input
-do while (ierr == 0)
-  numLines = numLines + 1
-  read(fid,*,iostat=ierr) CTMP
-end do
-numLines = numLines - 1
-
-! Read input
-allocate(inMatrix(numLines))
-rewind(fid)
-do i = 1, numLines
-  read(fid,'(A)') inMatrix(i)
-end do
-
-lineLen = len(trim(inMatrix(1)))
+matrixHeight = 12
+matrixWidth = len(trim(inMatrix(1)))
 k = 1
 ! MAIN PROGRAM
-do i = 1,numLines
+do i = 1, matrixHeight
   loopFlag = .false.
-  do j = k,lineLen
+  do j = k, matrixWidth
     ! Handle first line
     if (i == 1) then
       ! Handle WALL
@@ -48,9 +69,9 @@ do i = 1,numLines
       k = k + 1
       cycle
     end if
- 
+
     ! Handle end of the line
-    if (j == lineLen .and. inMatrix(i)(j:j) == "1") then
+    if (j == matrixWidth .and. inMatrix(i)(j:j) == "1") then
       exit
     end if
 
@@ -84,6 +105,5 @@ end do
 
 ! Finish program
 deallocate(inMatrix)
-close(fid)
-
 end program readText
+
