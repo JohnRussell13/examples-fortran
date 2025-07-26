@@ -3,6 +3,7 @@ implicit none
 
 public :: matrixSize
 public :: matrixReader
+
 contains
 
   function matrixSize() result(numLines)
@@ -41,7 +42,6 @@ contains
 
     ! Read input
     allocate(inMatrix(numLines))
-    ! rewind(fid)
     do i = 1, numLines
       read(fid,'(A)') inMatrix(i)
     end do
